@@ -98,10 +98,74 @@
 
 -- Create new tables, according to your domain model
 -- TODO!
+CREATE TABLE studios (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT
+);
+
+Create table movies (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT,
+    year_released INTEGER,
+    mpaa_rating TEXT,
+    studio_id INTEGER
+);
+
+CREATE TABLE agents (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT
+);
+
+CREATE TABLE actors (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    agent_id INTEGER
+);
+
+CREATE TABLE movie_roles (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    movie_id INTEGER,
+    actor_id INTEGER,
+    character_name TEXT
+);
 
 -- Insert data into your database that reflects the sample data shown above
 -- Use hard-coded foreign key IDs when necessary
 -- TODO!
+
+INSERT INTO studios (name) VALUES
+('Paramount Pictures.');
+
+INSERT INTO movies (title, year_released, mpaa_rating, studio_id) VALUES
+('Creed', 2015, 'PG-13', 1),
+('Creed 2', 2020, 'PG-13', 1),
+('Creed 3', 2023, 'PG-13', 1);
+
+INSERT INTO agents (name) VALUES
+('Ryan Coogler');
+
+INSERT INTO actors (name) VALUES
+('Michael B. Jordan'),
+('Tessa Thompson'),
+('Denzel Washington');
+
+INSERT INTO movie_roles (movie_id, actor_id, character_name) VALUES
+
+(1, 1, 'Adonis Creed'),
+(1, 2, 'Adonis Creeds Girlfriend'),
+(1, 3, 'Rocky Balboa'),
+
+(2, 1, 'Adonis Creed'),
+(2, 2, 'Adonis Creeds Girlfriend'),
+(2, 3, 'Rocky Balboa'),
+
+(3, 1, 'Adonis Creed'),
+(3, 2, 'Adonis Creeds Girlfriend'),
+(3, 3, 'Rocky Balboa');
+
+UPDATE actors
+SET agent_id = 1
+WHERE name = 'Michael B. Jordan';
 
 -- Prints a header for the movies output
 .print "Movies"
@@ -110,6 +174,14 @@
 
 -- ***TODO!***
 -- The SQL statement for the movies output goes here.
+SELECT
+  m.title,
+  m.year_released,
+  m.mpaa_rating,
+  s.name
+FROM movies m
+JOIN studios s
+  ON m.studio_id = s.id;
 
 -- Example output:
 -- Movies
@@ -126,6 +198,18 @@
 
 -- ***TODO!***
 -- The SQL statement for the cast output goes here.
+
+SELECT
+  m.title,
+  a.name,
+  mr.character_name
+FROM movie_roles mr
+JOIN movies m
+  ON mr.movie_id = m.id
+JOIN actors a
+  ON mr.actor_id = a.id
+ORDER BY m.id, mr.id;
+
 
 -- Example output:
 -- Top Cast
@@ -154,6 +238,13 @@
 
 -- ***TODO!***
 -- The SQL statement for the represented actor(s) output goes here.
+
+SELECT
+  a.name
+FROM actors a
+JOIN agents ag
+  ON a.agent_id = ag.id
+WHERE ag.id = 1;
 
 -- Example output:
 -- Represented by agent
